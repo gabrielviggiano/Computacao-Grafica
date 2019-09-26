@@ -1,4 +1,4 @@
-/*
+﻿/*
 *******************************************
 ***** Trabalho 1 - Computação Gráfica *****
 ***** Autor: Gabriel Viggiano Fonseca *****
@@ -17,6 +17,9 @@
 #include <unistd.h>
 #include <string>
 #include <iostream>
+
+#include <glm/vec3.hpp>
+
 
 
 /* Declaração de váriaveis GLOBAIS*/
@@ -97,38 +100,13 @@ static void f_inserirIndices(FILE* arquivo){
 
 static void f_alocaVariaveis (FILE *arquivo){
     char linha[BUFSIZ];
+    char teste[BUFSIZ];
 
     fscanf(arquivo,"%s",linha);
     qtd_vertices = atoi(linha);
 
     fscanf(arquivo,"%s",linha);
     incidencia = atoi(linha);
-/*
-    glm::vec3 maiorCoordenada = glm::vec3(-1000, -1000, -1000);
-	glm::vec3 menorCoordenada = glm::vec3(1000, 1000, 1000);
-	int indiceLinha = 0;
-	float values[3];
-
-        int indiceLinha = 0;
-        float values[3];
-
-        for (int i = 0; i < qtd_vertices; i++)
-        {
-            fscanf(file, "%d %f %f %f", &indiceLinha, &values[0], &values[1], &values[2]);
-            vertices[(i * 3) + 2] = values[2];
-
-            if (values[2] > maiorCoordenada.z){
-                maiorCoordenada.z = values[2];
-            }
-
-            if (values[2] < menorCoordenada.z){
-                menorCoordenada.z = values[2];
-            }
-        }*/
-
-    x = 0;
-    y = 0;
-    z = -700;
 
     vertices = (GLfloat*)malloc(qtd_vertices * 3 *sizeof(GLfloat));
     normais = (GLfloat*)malloc(qtd_vertices * 3 *sizeof(GLfloat));
@@ -137,6 +115,21 @@ static void f_alocaVariaveis (FILE *arquivo){
     f_insereVertices(arquivo);
     f_inserirIndices(arquivo);
 
+    glm::vec3 maiorCoordenada = glm::vec3(-1000, -1000, -1000);
+	glm::vec3 menorCoordenada = glm::vec3(1000, 1000, 1000);
+	int indiceLinha = 0;
+	float values[3];
+
+	for (int i = 0; i < qtd_vertices; i++)
+	{
+		fscanf(arquivo, "%s %s %s %s", &indiceLinha, &values[0], &values[1], &values[2]);
+		vertices[(i * 3)] = values[0]; vertices[(i * 3) + 1] = values[1]; vertices[(i * 3) + 2] = values[2];
+        printf("%f", values[0] );
+	}
+
+    x = 0;
+    y = 0;
+    z = -700;
 }
 
 // x → posição x dada em pixels na qual o texto será escrito
@@ -268,10 +261,10 @@ static void key(unsigned char key, int x1, int y1){
     }
 }
 
-
 int main(int argc, char *argv[]){
     char nome_arquivo[255];
-    printf("Digite o nome do arquivo a ser aberto:\n");
+    printf("Digite o nome do arquivo a ser aberto!\n");
+    printf("Exemplo: bunny.msh\n");
     scanf("%s", nome_arquivo);
     FILE *arquivo = openfile(nome_arquivo);
 
