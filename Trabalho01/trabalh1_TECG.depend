@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1569353246 source:c:\users\gvfonseca\documents\privado\trabalh1_tecg\main.cpp
+	<GLUT/glut.h>
+	<windows.h>
+	<GL/glut.h>
+	<stdlib.h>
+	<stdio.h>
+	<unistd.h>
+	<string>
+	<iostream>
+
+1568310197 c:\users\gvfonseca\desktop\glutcb\include\gl\glut.h
+	<windows.h>
+	<GL/gl.h>
+	<GL/glu.h>
+
