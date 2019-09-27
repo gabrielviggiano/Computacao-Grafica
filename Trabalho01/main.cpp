@@ -114,22 +114,31 @@ static void f_alocaVariaveis (FILE *arquivo){
 
     f_insereVertices(arquivo);
     f_inserirIndices(arquivo);
+    double maior_z = 0;
+    double menor_z;
 
-    glm::vec3 maiorCoordenada = glm::vec3(-1000, -1000, -1000);
-	glm::vec3 menorCoordenada = glm::vec3(1000, 1000, 1000);
-	int indiceLinha = 0;
-	float values[3];
 
-	for (int i = 0; i < qtd_vertices; i++)
-	{
-		fscanf(arquivo, "%s %s %s %s", &indiceLinha, &values[0], &values[1], &values[2]);
-		vertices[(i * 3)] = values[0]; vertices[(i * 3) + 1] = values[1]; vertices[(i * 3) + 2] = values[2];
-        printf("%f", values[0] );
+	for (int i = 0; i < qtd_vertices*3; i++){
+        if(vertices[(indices[i]*3)+2] > maior_z){
+            maior_z = vertices[(indices[i]*3)+2];
+        }
+
+        if(vertices[(indices[i]*3)+2] < menor_z){
+            menor_z = vertices[(indices[i]*3)+2];
+        }
 	}
+    printf("\n%f", maior_z);
+    printf("\n%f", menor_z);
 
-    x = 0;
-    y = 0;
-    z = -700;
+    x=0;
+    y=0;
+    z = -(maior_z*5);
+
+    printf("\n%f",z);
+}
+
+static void funcaoteste(FILE * arquivo){
+
 }
 
 // x → posição x dada em pixels na qual o texto será escrito
