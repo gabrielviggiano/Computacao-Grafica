@@ -19,6 +19,7 @@
 #include <iostream>
 
 #include <glm/vec3.hpp>
+#include <math.h>
 
 
 
@@ -27,6 +28,8 @@ int qtd_vertices = 0, incidencia = 0;
 double x;
 double y;
 double z;
+double fov = 60;
+double cx, cy, cz;
 
 int altura = 600;
 int largura = 800;
@@ -114,11 +117,28 @@ static void f_alocaVariaveis (FILE *arquivo){
 
     f_insereVertices(arquivo);
     f_inserirIndices(arquivo);
-    double maior_z = 0;
-    double menor_z;
+    double maior_z = 0, maior_y = 0, maior_x = 0;
+    double menor_z = 1000, menor_y = 1000, menor_x = 1000;
+    double d;
 
 
-	for (int i = 0; i < qtd_vertices*3; i++){
+	for (int i = 0; i < qtd_vertices; i++){
+        if(vertices[(indices[i]*3)] > maior_x){
+            maior_x = vertices[(indices[i]*3)];
+        }
+
+        if(vertices[(indices[i]*3)] < menor_x){
+            menor_x = vertices[(indices[i]*3)];
+        }
+
+        if(vertices[(indices[i]*3)+1] > maior_y){
+            maior_y = vertices[(indices[i]*3)+1];
+        }
+
+        if(vertices[(indices[i]*3)+1] < menor_y){
+            menor_y = vertices[(indices[i]*3)+1];
+        }
+
         if(vertices[(indices[i]*3)+2] > maior_z){
             maior_z = vertices[(indices[i]*3)+2];
         }
@@ -127,14 +147,30 @@ static void f_alocaVariaveis (FILE *arquivo){
             menor_z = vertices[(indices[i]*3)+2];
         }
 	}
-    printf("\n%f", maior_z);
-    printf("\n%f", menor_z);
+	cx = (maior_x - menor_x)/2;
+	cy = (maior_y - menor_y)/2;
+	cz = (maior_z - menor_z)/2;
+
+    d = (cy) * (tan(fov/2));
+
+    printf("MAIOR X %f\n", maior_x);
+    printf("MENOR X %f\n\n", menor_x);
+    printf("MAIOR Y %f\n", maior_y);
+    printf("MENOR Y %f\n\n", menor_y);
+    printf("MAIOR Z %f\n", maior_z);
+    printf("MENOR Z %f\n\n", menor_z);
+
+    printf("CX: %f\n", cx);
+    printf("CY: %f\n", cy);
+    printf("CZ: %f\n", cz);
+
+    printf("D: %f\n", d);
 
     x=0;
     y=0;
-    z = -(maior_z*5);
+    z = d -(cz);
 
-    printf("\n%f",z);
+    printf("Z %f\n",z);
 }
 
 static void funcaoteste(FILE * arquivo){
@@ -177,7 +213,7 @@ static void resize(int width, int height)
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
     //glFrustum(-ar, ar, -1.0, 1.0, 1.0, 100.0);
-    gluPerspective(60,ar,0.1,10000.0);
+    gluPerspective(fov,ar,0.1,10000.0);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity() ;
@@ -196,9 +232,11 @@ static void desenhoGlDrawElements(double a){
     glNormalPointer(GL_FLOAT, 0, normais);
     glVertexPointer(3, GL_FLOAT, 0, vertices);
 
+
     glPushMatrix();
         glTranslated(x,y,z);
         glRotated(a,0,1,0);
+        glTranslated(-cx, -cy, -cz);
         glDrawElements(GL_TRIANGLES, incidencia * 3, GL_UNSIGNED_INT, indices);
     glPopMatrix();
 
@@ -212,6 +250,7 @@ static void desenhoGlBegin(double a){
     glPushMatrix();
         glTranslated(x,y,z);
         glRotated(-a,0,1,0);
+        glTranslated(-cx,-cy,-cz);
 
         glBegin(GL_TRIANGLES);
             for(int i=0; i < incidencia * 3; i++){
@@ -235,11 +274,12 @@ static void display(void){
     double fps = 1/Tempo;
 
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glColor3d(1,0,0);
 
     if(onGlBegin){
+        glColor3d(1,0,0);
         desenhoGlBegin(a);
     }else{
+        glColor3d(0,0,1);
         desenhoGlDrawElements(a);
     }
 
