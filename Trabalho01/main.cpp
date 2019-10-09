@@ -18,7 +18,6 @@
 #include <string>
 #include <iostream>
 
-#include <glm/vec3.hpp>
 #include <math.h>
 
 
@@ -53,7 +52,7 @@ const GLfloat high_shininess[] = { 50.0f };
 bool onGlBegin = true;
 
 
-/**/
+/* Função para abrir o arquivo */
 static FILE* openfile(char *fileName){
     FILE *arquivo;
     arquivo = fopen(fileName, "r");
@@ -61,6 +60,7 @@ static FILE* openfile(char *fileName){
     return arquivo;
 }
 
+/*Função para inserir os vertices contidos no arquivo*/
 static void f_insereVertices(FILE* arquivo){
     char linha[BUFSIZ];
 
@@ -84,6 +84,7 @@ static void f_insereVertices(FILE* arquivo){
     }
 }
 
+/*Função para inserir os indices contidos no arquivo*/
 static void f_inserirIndices(FILE* arquivo){
     char linha[BUFSIZ];
 
@@ -100,7 +101,7 @@ static void f_inserirIndices(FILE* arquivo){
     }
 }
 
-
+/* Função para alocar variaveis gerais que serão utilizadas nos principais processos do programa, como vetores dinamicos e coordenadas. */
 static void f_alocaVariaveis (FILE *arquivo){
     char linha[BUFSIZ];
     char teste[BUFSIZ];
@@ -153,29 +154,11 @@ static void f_alocaVariaveis (FILE *arquivo){
 
     d = (cy) * (tan(fov/2));
 
-    printf("MAIOR X %f\n", maior_x);
-    printf("MENOR X %f\n\n", menor_x);
-    printf("MAIOR Y %f\n", maior_y);
-    printf("MENOR Y %f\n\n", menor_y);
-    printf("MAIOR Z %f\n", maior_z);
-    printf("MENOR Z %f\n\n", menor_z);
-
-    printf("CX: %f\n", cx);
-    printf("CY: %f\n", cy);
-    printf("CZ: %f\n", cz);
-
-    printf("D: %f\n", d);
-
     x=0;
     y=0;
     z = d -(cz);
-
-    printf("Z %f\n",z);
 }
 
-static void funcaoteste(FILE * arquivo){
-
-}
 
 // x → posição x dada em pixels na qual o texto será escrito
 // y → posição y dada em pixels na qual o texto será escrito
@@ -224,7 +207,7 @@ static void idle(void)
     glutPostRedisplay();
 }
 
-
+/* Função de desenho no modo GLDRAWELEMENTS */
 static void desenhoGlDrawElements(double a){
     glEnableClientState(GL_NORMAL_ARRAY);
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -246,6 +229,7 @@ static void desenhoGlDrawElements(double a){
     printtext(10,10,largura, altura, "Modo ativo: GL Draw Elements");
 }
 
+/* Função de desenho no modo GLBEGIN */
 static void desenhoGlBegin(double a){
     glPushMatrix();
         glTranslated(x,y,z);
@@ -263,6 +247,7 @@ static void desenhoGlBegin(double a){
     printtext(10,10,largura,altura, "Modo ativo: GL Begin");
 }
 
+/* Função de desenho na tela em geral e calculo de FPS */
 static void display(void){
     const double t = glutGet(GLUT_ELAPSED_TIME) / 1000.0;
     const double a = t*90.0;
